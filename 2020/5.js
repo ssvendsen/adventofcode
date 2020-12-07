@@ -822,14 +822,16 @@ FBFFBBBRRR
 FFBBFFFRRL
 FFBBFBBRRR
 FFBFFFBLRL
-BFBBBFFLRL`.split("\n");
+BFBBBFFLRL`;
 
-const getRow = (bpass) => parseInt(bpass.substring(0, 7).replace(/F/g, "0").replace(/B/g, "1"), 2);
-const getCol = (bpass) => parseInt(bpass.substring(7).replace(/L/g, "0").replace(/R/g, "1"), 2);
-const seatIds = input.map((bpass) => getRow(bpass) * 8 + getCol(bpass));
+const seatIds = input.replace(/F|L/g, "0").replace(/B|R/g, "1").split("\n").map(s => parseInt(s, 2)).sort();
+
+// const getRow = (bpass) => parseInt(bpass.substring(0, 7).replace(/F/g, "0").replace(/B/g, "1"), 2);
+// const getCol = (bpass) => parseInt(bpass.substring(7).replace(/L/g, "0").replace(/R/g, "1"), 2);
+// const seatIds = input.map((bpass) => getRow(bpass) * 8 + getCol(bpass)).sort();
 
 // Part 1
-console.log(seatIds.reduce((highId, currentId) => Math.max(highId, currentId), 0));
+console.log(seatIds[seatIds.length - 1]);
 
 // part2
-console.log(seatIds.sort().find((seatId, i, ids) => ids[i + 1] === seatId + 2) + 1);
+console.log(seatIds.find((seatId, i, ids) => ids[i + 1] === seatId + 2) + 1);

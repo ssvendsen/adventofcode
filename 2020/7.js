@@ -609,18 +609,16 @@ input.split("\n").forEach((line) => {
 
 const canContain = (outerColor, innerColor) => innerColor in rules[outerColor];
 
-// console.log(rules);
-
+// part 1
 const canEventuallyContain = (outerColor, innerColor) => {
     if (canContain(outerColor, innerColor))
         return true;
     else
         return Object.keys(rules[outerColor]).find((c) => canEventuallyContain(c, innerColor)) ? true : false;
 }
+console.log(Object.keys(rules).reduce((sum, c) => canEventuallyContain(c, "shiny gold") ? sum + 1: sum , 0));
 
-const r = Object.keys(rules).reduce((sum, c) => canEventuallyContain(c, "shiny gold") ? sum + 1: sum , 0);
-console.log(r);
-
+// part 2
 const countInside = (color) => {
     const rule = rules[color];
     return Object.keys(rule).reduce((sum, c) => {

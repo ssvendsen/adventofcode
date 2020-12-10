@@ -130,8 +130,10 @@ if (lastOneIncrSeqLength > 0) {
     oneIncrSeqLengthDistr[lastOneIncrSeqLength]++
 } 
 
-const variantsForLengths = {1: 1, 2: 2, 3: 4, 4: 7};
-const permutations = Object.entries(oneIncrSeqLengthDistr).reduce((product, [length, count]) => product * (variantsForLengths[length] ** count), 1);
+const permutationsForSeqLengths = {1: 1, 2: 2, 3: 4, 4: 7};
+const totalPermutations = Object.entries(oneIncrSeqLengthDistr).reduce(
+    (permutations, [seqLength, count]) => permutations * (permutationsForSeqLengths[seqLength] ** count), 1
+);
 
-console.log(permutations)
+console.log(totalPermutations)
 

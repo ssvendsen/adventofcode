@@ -1,4 +1,63 @@
-const input = 
+const solvePuzzle = (title, input) => {
+
+    console.log("-", title, "-");
+    
+    const FREE_SEAT = "L", TAKEN_SEAT = "#";
+    const layout = input.split("");
+    const width = layout.indexOf("\n") + 1;
+    const vectors = [-1, 1, -width, width, -width-1, -width+1, width-1, width+1];
+
+    const countAdjacent = (map, position, token, lookFurter = false) => vectors.reduce((count, vector) => {
+        let pos = position + vector;
+        while (lookFurter && map[pos] === '.')
+            pos += vector;
+        return map[pos] === token ? count + 1 : count;
+    }, 0);
+
+    const countAll = (map, token) => map.reduce((count, seat) => {
+        return seat === token ? count + 1 : count
+    }, 0);
+
+    const runOnce = (map, lookFurther = false) => map.map((token, position) => {
+        const adjacentTaken = countAdjacent(map, position, TAKEN_SEAT, lookFurther);
+        if (token === FREE_SEAT && adjacentTaken === 0) {
+            return TAKEN_SEAT;
+        } else if (token === TAKEN_SEAT && (adjacentTaken >= (lookFurther ? 5 : 4))) {
+            return FREE_SEAT;
+        } else {
+            return token;
+        }
+    });
+
+    const run = (lookFurther = false) => {
+        let map = layout;
+        let taken = 0, lastTaken = -1;
+        while (taken !== lastTaken) {
+            map = runOnce(map, lookFurther);
+            lastTaken = taken;
+            taken = countAll(map, TAKEN_SEAT);
+        }
+        return taken;
+    };
+
+    console.log("1:", run());
+    console.log("2:", run(true));
+}
+
+solvePuzzle("Day 11 example", 
+`L.LL.LL.LL
+LLLLLLL.LL
+L.L.L..L..
+LLLL.LL.LL
+L.LL.LL.LL
+L.LLLLL.LL
+..L.L.....
+LLLLLLLLLL
+L.LLLLLL.L
+L.LLLLL.LL`
+);
+
+solvePuzzle("Day 11 challenge",
 `LLLLL.LLLL.LL..LLLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLLLLLLLLLL.L.LLLLLLLLL.LLLLLLL.LLLL.LLLLLLLL
 LLLLLLLL.LLLLL.LLLLLLLLLLLLLLLL.LLLLLLLL.LLLLLLLLLLLL.LLLLLLLLLLLLLLL.LL.LLL.LLLL.LLLLLLLL
 LLLLLLLLL.LLLLLLLLLLLLLLLLLLLLL.LLLLLLL..LLLLLL.LLLLLLLLLL..LLLLLLLL.LLLLLLLLL.LLLLLLLLLLL
@@ -89,46 +148,5 @@ LLLLL.LLLLLLLL.LLLLLLLLL.LLLLLLLLLLLL.LLLLL.LLLLLLLLL.LLLL.LLLLLLLLL.LLLL.LLLLLL
 LLLLL.LLLLLLLLLLLLLL.LLL.LLLLLL.LLLLLLLL.LLLLLLLLL.LL.LLLL.LLLLLLL.L.LLLLLLLLLLLL.LLLLLLLL
 LLLLL.LLLL.LLL.LLLLLLLLL.LLLLLLLLLLLLLLL..LLLLL.LLLLL.LLLL..LL..LLLL.LLLLLLL.LLLL.LLLLLLLL
 LLLLL.LLLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLLL.LLLLLL.LLLLLLLLLL..LLLL.LL..LLLLLLL.LLLLLLLLLLLLL
-LLLLLLLLLLLLLL.LL.LLLLLL.LLLL.L..LLLLLLL.LLL.LL.LLLLLLLLLL.LLLLLLLLL.L.LLLLL.LLLL.LLLLLL.L
-`.split("");
-
-const FREE = "L", TAKEN = "#";
-const width = input.indexOf("\n") + 1;
-const vectors = [-1, 1, -width, width, -width-1, -width+1, width-1, width+1];
-
-const countVisible = (map, pos, token, lookFurter = false) => {
-    return vectors.reduce((count, vector) => {
-        let v = vector;
-        while (lookFurter && map[pos + v] === '.')
-            v += vector;
-        const adjacent = map[pos + v];
-        return adjacent === token ? count + 1 : count;
-    }, 0)
-};
-
-const oneRound = (map, modifiedRules = false) => map.map((token, pos) => {
-    const adjacentTaken = countVisible(map, pos, TAKEN, modifiedRules);
-    if (token === FREE && adjacentTaken === 0) {
-        return TAKEN;
-    } else if (token === TAKEN && (adjacentTaken >= (modifiedRules ? 5 : 4))) {
-        return FREE;
-    } else {
-        return token;
-    }
-})
-
-const countAll = (map, token) => map.reduce((count, seat) => seat === token ? count + 1 : count, 0);
-
-const run = (modifiedRules = false) => {
-    let map = input;
-    let taken = 0, lastTaken = -1;
-    while (taken !== lastTaken) {
-        map = oneRound(map, modifiedRules);
-        lastTaken = taken;
-        taken = countAll(map, TAKEN);
-    }
-    return taken;
-};
-
-console.log("Part 1:", run());
-console.log("Part 2:", run(true));
+LLLLLLLLLLLLLL.LL.LLLLLL.LLLL.L..LLLLLLL.LLL.LL.LLLLLLLLLL.LLLLLLLLL.L.LLLLL.LLLL.LLLLLL.L`
+);

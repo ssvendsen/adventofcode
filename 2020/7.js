@@ -1,4 +1,52 @@
-const input = 
+const solve = (input) => {
+
+    const rules = {};
+    input.split("\n").forEach((line) => {
+        const [bagColor, content] = line.split(" bags contain ");
+        const innerBagColors = {};
+        if (!content.includes("no other bags")) {
+            content.split(", ").forEach((bags) => {
+                const [, count, color] = bags.match(/^(\d) (.+) bag/);
+                innerBagColors[color] = count;
+            });
+        }
+        rules[bagColor] = innerBagColors;
+    });
+    
+    const canContain = (outerColor, innerColor) => innerColor in rules[outerColor];
+
+    const canEventuallyContain = (outerColor, innerColor) => {
+        if (canContain(outerColor, innerColor))
+            return true;
+        else
+            return Object.keys(rules[outerColor]).find((c) => canEventuallyContain(c, innerColor)) ? true : false;
+    }
+    const task1 = Object.keys(rules).reduce((sum, c) => canEventuallyContain(c, "shiny gold") ? sum + 1: sum , 0);
+
+    const countBagsInside = (color) => {
+        const rule = rules[color];
+        return Object.keys(rule).reduce((sum, c) => {
+            const count = rule[c];
+            return sum + count * (1 + countBagsInside(c));
+         }, 0);
+    }
+    const task2 = countBagsInside("shiny gold");
+    
+    return [task1, task2];
+}
+
+const example = 
+`light red bags contain 1 bright white bag, 2 muted yellow bags.
+dark orange bags contain 3 bright white bags, 4 muted yellow bags.
+bright white bags contain 1 shiny gold bag.
+muted yellow bags contain 2 shiny gold bags, 9 faded blue bags.
+shiny gold bags contain 1 dark olive bag, 2 vibrant plum bags.
+dark olive bags contain 3 faded blue bags, 4 dotted black bags.
+vibrant plum bags contain 5 faded blue bags, 6 dotted black bags.
+faded blue bags contain no other bags.
+dotted black bags contain no other bags.`;
+
+const challenge = 
 `posh brown bags contain 5 dim coral bags, 1 plaid blue bag, 2 faded bronze bags, 2 light black bags.
 vibrant lime bags contain 3 dull lavender bags, 3 dim crimson bags, 3 mirrored lavender bags, 2 muted cyan bags.
 clear olive bags contain 1 wavy gold bag, 4 dim lime bags, 3 dull tomato bags, 5 dark turquoise bags.
@@ -594,37 +642,5 @@ wavy black bags contain 5 mirrored turquoise bags.
 dark coral bags contain 5 faded violet bags.
 pale orange bags contain 3 mirrored red bags, 4 clear olive bags.`;
 
-const rules = {};
-input.split("\n").forEach((line) => {
-    const [, outerBagColor, content] = line.match(/^(.+) bags contain (.+)\.$/);
-    const innerBagColors = {};
-    if (content !== "no other bags") {
-        content.split(", ").forEach((part) => {
-            const [, count, color] = part.match(/^(\d) (.+) bag/);
-            innerBagColors[color] = count;
-        });
-    }
-    rules[outerBagColor] = innerBagColors;
-});
-
-const canContain = (outerColor, innerColor) => innerColor in rules[outerColor];
-
-// part 1
-const canEventuallyContain = (outerColor, innerColor) => {
-    if (canContain(outerColor, innerColor))
-        return true;
-    else
-        return Object.keys(rules[outerColor]).find((c) => canEventuallyContain(c, innerColor)) ? true : false;
-}
-console.log(Object.keys(rules).reduce((sum, c) => canEventuallyContain(c, "shiny gold") ? sum + 1: sum , 0));
-
-// part 2
-const countInside = (color) => {
-    const rule = rules[color];
-    return Object.keys(rule).reduce((sum, c) => {
-        const count = rule[c];
-        return sum + count * (1 + countInside(c));
-     }, 0);
-}
-
-console.log(countInside("shiny gold"));
+console.log(solve(example)); 
+console.log(solve(challenge)); 

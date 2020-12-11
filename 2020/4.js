@@ -1,4 +1,90 @@
-const input = 
+const solve = (input) => {
+
+    const lines = input.split("\n");
+
+    const passports = [];
+    passports.push({});
+
+    lines.forEach((line) => {
+        // console.log("line", line);
+        passport = passports[passports.length - 1];
+        const pairs = line.length > 0 ? line.split(" ") : [];
+        if (pairs.length > 0) {
+            pairs.forEach((pair) => {
+                const [key, value] = pair.split(":")
+                passport[key] = value;
+                // console.log(pair, key, value);
+            });
+        } else {
+            passports.push({});
+        }
+    });
+
+    // part 1
+    const valid1 = [];
+    passports.forEach((p) => {
+        if (p.byr && p.iyr && p.eyr && p.hgt && p.hcl && p.ecl && p.pid)
+            valid1.push(p);
+    })
+    const task1 = valid1.length;
+
+    /*
+    byr (Birth Year) - four digits; at least 1920 and at most 2002.
+    iyr (Issue Year) - four digits; at least 2010 and at most 2020.
+    eyr (Expiration Year) - four digits; at least 2020 and at most 2030.
+    hgt (Height) - a number followed by either cm or in:
+    If cm, the number must be at least 150 and at most 193.
+    If in, the number must be at least 59 and at most 76.
+    hcl (Hair Color) - a # followed by exactly six characters 0-9 or a-f.
+    ecl (Eye Color) - exactly one of: amb blu brn gry grn hzl oth.
+    pid (Passport ID) - a nine-digit number, including leading zeroes.
+    cid (Country ID) - ignored, missing or not.
+    */
+
+    const inRange = (val, min, max) => +val >= min && +val <= max;
+    const valid2 = [];
+    valid1.forEach((p) => {
+        // console.log(p);
+        const byr = p.byr.match(/^(\d\d\d\d)$/)[1];
+        const iyr = p.iyr.match(/^(\d\d\d\d)$/)[1];
+        const eyr = p.eyr.match(/^(\d\d\d\d)$/)[1];
+        const [, hgt, hgtFormat] = p.hgt.match(/^(\d+)(cm|in)$/) || [];
+        const [, hcl] = p.hcl.match(/^#([0-9a-f]{6})$/) || [];
+        const [, ecl] = p.ecl.match(/^(amb|blu|brn|gry|grn|hzl|oth)$/) || [];
+        const [, pid] = p.pid.match(/^(\d{9})$/) || [];
+        // console.log(byr, iyr, eyr, hgt, hgtFormat, hcl, ecl, pid);
+
+        if (
+            byr && inRange(byr, 1920, 2002) &&
+            iyr && inRange(iyr, 2010, 2020) &&
+            eyr && inRange(eyr, 2020, 2030) &&
+            hgt && ((hgtFormat === "cm" && inRange(hgt, 150, 193)) || (hgtFormat === "in" && inRange(hgt, 59, 76))) && 
+            hcl && ecl && pid
+        )
+            valid2.push(p);
+    })
+    const task2 = valid2.length;
+
+    return [task1, task2];
+};
+
+
+const example =
+`ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
+byr:1937 iyr:2017 cid:147 hgt:183cm
+
+iyr:2013 ecl:amb cid:350 eyr:2023 pid:028048884
+hcl:#cfa07d byr:1929
+
+hcl:#ae17e1 iyr:2013
+eyr:2024
+ecl:brn pid:760753108 byr:1931
+hgt:179cm
+
+hcl:#cfa07d eyr:2025 pid:166559648
+iyr:2011 ecl:brn hgt:59in`;
+
+const challenge = 
 `pid:827837505 byr:1976
 hgt:187cm
 iyr:2016
@@ -997,68 +1083,7 @@ cid:293
 hcl:#bc352c pid:321838059 byr:1930 hgt:178cm cid:213 eyr:2023 ecl:amb
 iyr:2017
 
-hgt:173cm byr:1925 pid:070222017 iyr:2013 hcl:#ceb3a1 ecl:gry eyr:2024`.split("\n");
+hgt:173cm byr:1925 pid:070222017 iyr:2013 hcl:#ceb3a1 ecl:gry eyr:2024`;
 
-const passports = [];
-passports.push({});
-
-input.forEach((line) => {
-    // console.log("line", line);
-    passport = passports[passports.length - 1];
-    const pairs = line.length > 0 ? line.split(" ") : [];
-    if (pairs.length > 0) {
-        pairs.forEach((pair) => {
-            const [key, value] = pair.split(":")
-            passport[key] = value;
-            // console.log(pair, key, value);
-        });
-    } else {
-        passports.push({});
-    }
-});
-
-// part 1
-const valid1 = [];
-passports.forEach((p) => {
-    if (p.byr && p.iyr && p.eyr && p.hgt && p.hcl && p.ecl && p.pid)
-        valid1.push(p);
-})
-console.log(valid1.length);
-
-// part 2
-/*
-byr (Birth Year) - four digits; at least 1920 and at most 2002.
-iyr (Issue Year) - four digits; at least 2010 and at most 2020.
-eyr (Expiration Year) - four digits; at least 2020 and at most 2030.
-hgt (Height) - a number followed by either cm or in:
-If cm, the number must be at least 150 and at most 193.
-If in, the number must be at least 59 and at most 76.
-hcl (Hair Color) - a # followed by exactly six characters 0-9 or a-f.
-ecl (Eye Color) - exactly one of: amb blu brn gry grn hzl oth.
-pid (Passport ID) - a nine-digit number, including leading zeroes.
-cid (Country ID) - ignored, missing or not.
-*/
-
-const inRange = (val, min, max) => +val >= min && +val <= max;
-const valid2 = [];
-valid1.forEach((p) => {
-    // console.log(p);
-    const byr = p.byr.match(/^(\d\d\d\d)$/)[1];
-    const iyr = p.iyr.match(/^(\d\d\d\d)$/)[1];
-    const eyr = p.eyr.match(/^(\d\d\d\d)$/)[1];
-    const [, hgt, hgtFormat] = p.hgt.match(/^(\d+)(cm|in)$/) || [];
-    const [, hcl] = p.hcl.match(/^#([0-9a-f]{6})$/) || [];
-    const [, ecl] = p.ecl.match(/^(amb|blu|brn|gry|grn|hzl|oth)$/) || [];
-    const [, pid] = p.pid.match(/^(\d{9})$/) || [];
-    // console.log(byr, iyr, eyr, hgt, hgtFormat, hcl, ecl, pid);
-
-    if (
-        byr && inRange(byr, 1920, 2002) &&
-        iyr && inRange(iyr, 2010, 2020) &&
-        eyr && inRange(eyr, 2020, 2030) &&
-        hgt && ((hgtFormat === "cm" && inRange(hgt, 150, 193)) || (hgtFormat === "in" && inRange(hgt, 59, 76))) && 
-        hcl && ecl && pid
-    )
-        valid2.push(p);
-})
-console.log(valid2.length);
+console.log(solve(example)); 
+console.log(solve(challenge)); 

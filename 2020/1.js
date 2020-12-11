@@ -1,4 +1,53 @@
-const input = 
+const solve = (input) => {
+    
+    const values = input.split("\n").map((str) => parseInt(str));
+    const sorted = values.sort((a, b) => a - b);
+
+    const findPairWithSumInRange = (list, head, tail, target) => {
+        while (head < tail) {
+            const a = list[head];
+            const b = list[tail];
+            if (a + b < target)
+                head ++;
+            else if (a + b > target)
+                tail--;
+            else
+                return [a, b];
+        }
+    }
+
+    const findTrippleWithSumInRange = (list, head, tail, target) => {
+        while (head < tail - 1) {
+            const a = list[head];
+            const pair = findPairWithSumInRange(list, head + 1, tail, target - a);
+            if (pair !== undefined) {
+                return [a, ...pair]; 
+            } else {
+                head++;
+            }
+        }    
+    }
+
+    const productOf = (list) => list.reduce((product, item) => product * item, 1);
+
+    const pair = findPairWithSumInRange(sorted, 0, sorted.length - 1, 2020);
+    const task1 = productOf(pair);
+
+    const tripple = findTrippleWithSumInRange(sorted, 0, sorted.length - 1, 2020);
+    const task2 = productOf(tripple);
+
+    return [task1, task2];
+}
+
+const example =
+`1721
+979
+366
+299
+675
+1456`;
+
+const challenge = 
 `1593
 1575
 1583
@@ -198,33 +247,7 @@ const input =
 1667
 1620
 1943
-1674`
-.split("\n").map((str) => parseInt(str));
+1674`;
 
-const sorted = input.sort((a, b) => a - b);
-
-const findPairWithSum = (head, tail, target) => {
-    while (head < tail) {
-        const sum = sorted[head] + sorted[tail];
-        if (sum < target)
-            head ++;
-        else if (sum > target)
-            tail--;
-        else
-            return [head, tail];
-    }
-}
-
-// Task 1
-[first, second] = findPairWithSum(0, sorted.length - 1, 2020);
-console.log(sorted[first] * sorted[second])
-
-// Task 2
-for (let first = 0; first < sorted.length; first++) {
-    const result = findPairWithSum(first + 1, sorted.length - 1, 2020 - sorted[first]);
-    if (result !== undefined) {
-        const [second, third] = result;
-        console.log(sorted[first] * sorted[second] * sorted[third]);
-        break;
-    }
-}
+console.log(solve(example)); 
+console.log(solve(challenge)); 

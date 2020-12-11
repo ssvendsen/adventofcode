@@ -1,4 +1,31 @@
-const input = 
+const solve = (input) => {
+    
+    const rules = input.split("\n");
+
+    const re = /^(\d+)-(\d+) (.): (.+)$/;
+    
+    let task1 = 0;
+    let task2 = 0;
+    rules.map((rule => {
+        const [match, aStr, bStr, char, password] = rule.match(re);
+        const [a, b] = [aStr, bStr].map(s => parseInt(s));
+        const count = (password.match(new RegExp(char, "g")) || []).length;
+        if (count >= a && count <= b)
+            task1++;
+        const [isCharA, isCharB] = [a, b].map((pos) => password.charAt(pos - 1) === char);
+        if (isCharA ? !isCharB : isCharB)
+            task2++;
+    }));
+    
+    return [task1, task2];
+}
+
+const example = 
+`1-3 a: abcde
+1-3 b: cdefg
+2-9 c: ccccccccc`;
+
+const challenge = 
 `1-8 n: dpwpmhknmnlglhjtrbpx
 11-12 n: frpknnndpntnncnnnnn
 4-8 t: tmttdtnttkr
@@ -998,27 +1025,7 @@ const input =
 1-11 s: qsssssspsssss
 4-11 g: zkxvrprgzxjcbg
 11-14 g: ggggggggggggggggg
-6-7 q: qqqqvqhq`
-.split("\n");
+6-7 q: qqqqvqhq`;
 
-const re = /^(\d+)-(\d+) (.): (.+)$/;
-
-let valid1 = 0;
-let valid2 = 0;
-input.map((line => {
-    const [match, aStr, bStr, char, password] = line.match(re);
-    const [a, b] = [aStr, bStr].map(s => parseInt(s));
-    const count = (password.match(new RegExp(char, "g")) || []).length;
-    if (count >= a && count <= b)
-        valid1++;
-    const [isCharA, isCharB] = [a, b].map((pos) => password.charAt(pos - 1) === char);
-    if (isCharA ? !isCharB : isCharB)
-        valid2++;
-}));
-
-// Task 1
-console.log(valid1);
-
-// Task 2
-console.log(valid2);
-
+console.log(solve(example)); 
+console.log(solve(challenge)); 

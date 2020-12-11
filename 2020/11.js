@@ -1,7 +1,5 @@
-const solvePuzzle = (title, input) => {
+const solve = (input) => {
 
-    console.log("-", title, "-");
-    
     const FREE_SEAT = "L", TAKEN_SEAT = "#";
     const layout = input.split("");
     const width = layout.indexOf("\n") + 1;
@@ -40,11 +38,12 @@ const solvePuzzle = (title, input) => {
         return taken;
     };
 
-    console.log("1:", run());
-    console.log("2:", run(true));
-}
+    const task1 = run();
+    const task2 = run(true);
+    return [task1, task2];
+};
 
-solvePuzzle("Day 11 example", 
+const example = 
 `L.LL.LL.LL
 LLLLLLL.LL
 L.L.L..L..
@@ -54,10 +53,9 @@ L.LLLLL.LL
 ..L.L.....
 LLLLLLLLLL
 L.LLLLLL.L
-L.LLLLL.LL`
-);
+L.LLLLL.LL`;
 
-solvePuzzle("Day 11 challenge",
+const challenge = 
 `LLLLL.LLLL.LL..LLLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLLLLLLLLLL.L.LLLLLLLLL.LLLLLLL.LLLL.LLLLLLLL
 LLLLLLLL.LLLLL.LLLLLLLLLLLLLLLL.LLLLLLLL.LLLLLLLLLLLL.LLLLLLLLLLLLLLL.LL.LLL.LLLL.LLLLLLLL
 LLLLLLLLL.LLLLLLLLLLLLLLLLLLLLL.LLLLLLL..LLLLLL.LLLLLLLLLL..LLLLLLLL.LLLLLLLLL.LLLLLLLLLLL
@@ -148,5 +146,7 @@ LLLLL.LLLLLLLL.LLLLLLLLL.LLLLLLLLLLLL.LLLLL.LLLLLLLLL.LLLL.LLLLLLLLL.LLLL.LLLLLL
 LLLLL.LLLLLLLLLLLLLL.LLL.LLLLLL.LLLLLLLL.LLLLLLLLL.LL.LLLL.LLLLLLL.L.LLLLLLLLLLLL.LLLLLLLL
 LLLLL.LLLL.LLL.LLLLLLLLL.LLLLLLLLLLLLLLL..LLLLL.LLLLL.LLLL..LL..LLLL.LLLLLLL.LLLL.LLLLLLLL
 LLLLL.LLLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLLL.LLLLLL.LLLLLLLLLL..LLLL.LL..LLLLLLL.LLLLLLLLLLLLL
-LLLLLLLLLLLLLL.LL.LLLLLL.LLLL.L..LLLLLLL.LLL.LL.LLLLLLLLLL.LLLLLLLLL.L.LLLLL.LLLL.LLLLLL.L`
-);
+LLLLLLLLLLLLLL.LL.LLLLLL.LLLL.L..LLLLLLL.LLL.LL.LLLLLLLLLL.LLLLLLLLL.L.LLLLL.LLLL.LLLLLL.L`;
+
+console.log(solve(example)); 
+console.log(solve(challenge)); 

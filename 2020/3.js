@@ -1,4 +1,48 @@
-const input = 
+const solve = (input) => {
+
+    const rows = input.split("\n");
+    const height = rows.length;
+    const width = rows[0].length;
+
+    const countTrees = (dX, dY) => {
+        let x = 0, y = 0, trees = 0;
+        while (y < height) {
+            if (rows[y].charAt(x % width) === "#") {
+                trees++;
+            }
+            x += dX;
+            y += dY;
+        }
+        return trees;
+    }
+
+    const task1 =
+        countTrees(3, 1);
+
+    const task2 = 
+        countTrees(1, 1) *
+        countTrees(3, 1) *
+        countTrees(5, 1) *
+        countTrees(7, 1) *
+        countTrees(1, 2);
+
+    return [task1, task2];
+}
+
+const example =
+`..##.......
+#...#...#..
+.#....#..#.
+..#.#...#.#
+.#...##..#.
+..#.##.....
+.#.#.#....#
+.#........#
+#.##...#...
+#...##....#
+.#..#...#.#`;
+
+const challenge = 
 `........#..#.##.#..............
 ...#...............#.#.........
 ...#..#...#..##....#...........
@@ -322,33 +366,6 @@ const input =
 ...#..#.....#..##.#....#......#
 ..#...#..#...#......#..........
 ....#..#....#.......#........#.`
-.split("\n");
 
-const rows = input.length;
-const cols = input[0].length;
-
-const countTrees = (rowInc, colInc) => {
-    let row = 0, col = 0, trees = 0;
-    while (row < rows) {
-        if (input[row].charAt(col % cols) === "#") {
-            trees++;
-        }
-        row += rowInc;
-        col += colInc;
-    }
-    return trees;
-}
-
-// Task 1
-console.log(
-    countTrees(1, 3)
-);
-
-// Task 2
-console.log(
-    countTrees(1, 1) *
-    countTrees(1, 3) *
-    countTrees(1, 5) *
-    countTrees(1, 7) *
-    countTrees(2, 1)
-);
+console.log(solve(example)); 
+console.log(solve(challenge)); 

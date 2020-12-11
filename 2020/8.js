@@ -1,4 +1,48 @@
-const input = 
+const solve = (input) => {
+
+    const instructions = input.split("\n");
+
+    const execute = (overrideAddr = -1) => {
+        const visited = instructions.map(l => false);
+        let addr = 0, acc = 0;
+        while (addr < instructions.length && !visited[addr]) {
+            visited[addr] = true;
+            const [op, arg] = instructions[addr].split(" ");
+            const jmpOp = addr !== overrideAddr ? "jmp" : "nop";
+            acc += op === "acc" ? +arg : 0;
+            addr += op === jmpOp ? +arg : 1;
+        }
+        return {addr, acc};
+    }
+
+    const task1 = execute().acc;
+
+    // part 2
+    let result;
+    for (let addr = 0; addr < instructions.length; addr++) {
+        result = execute(addr);
+        if (result.addr >= instructions.length) {
+            break;        
+        }
+    }
+    
+    const task2 = result.acc;
+
+    return [task1, task2];
+}
+
+const example = 
+`nop +0
+acc +1
+jmp +4
+acc +3
+jmp -3
+acc -99
+acc +1
+jmp -4
+acc +6`;
+
+const challenge = 
 `acc +18
 nop +222
 acc -16
@@ -610,29 +654,7 @@ acc +9
 acc -16
 acc -15
 nop -380
-jmp +1`.split("\n");
+jmp +1`;
 
-const execute = (overrideAddr = -1) => {
-    const visited = input.map(l => false);
-    let addr = 0, val = 0;
-    while (addr < input.length && !visited[addr]) {
-        visited[addr] = true;
-        const [op, arg] = input[addr].split(" ");
-        const jmpOp = addr !== overrideAddr ? "jmp" : "nop";
-        val += op === "acc" ? +arg : 0;
-        addr += op === jmpOp ? +arg : 1;
-    }
-    return {addr, val};
-}
-
-// part 1
-console.log(execute());
-
-// part 2
-for (let addr = 0; addr < input.length; addr++) {
-    const result = execute(addr);
-    if (result.addr >= input.length) {
-        console.log(result);
-        break;        
-    }
-}
+console.log(solve(example)); 
+console.log(solve(challenge)); 

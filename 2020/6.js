@@ -1,4 +1,42 @@
-const input = 
+const solve = (input) => {
+    
+    const groups = input.split("\n\n");
+    const questions = "abcdefghijklmnopqrstuvwxyz".split("");
+
+    const sumElementsOf = (array) => array.reduce((sum, a) => sum + a, 0);
+    const countElementsOf = (array, test) => array.reduce((sum, a) => test(a) ? sum + 1 : sum, 0);
+
+    const task1 = sumElementsOf(groups.map(group => (
+        countElementsOf(questions, q => group.includes(q))))
+    );
+
+    const task2 = sumElementsOf(groups.map(group => {
+        const personsInGroup = group.split("\n").length;
+        const yesCountForQuestions = questions.map(q => (group.match(new RegExp(q, "g")) || []).length);
+        return countElementsOf(yesCountForQuestions, count => count === personsInGroup);
+    }));
+
+    return [task1, task2];
+}
+
+const example = 
+`abc
+
+a
+b
+c
+
+ab
+ac
+
+a
+a
+a
+a
+
+b`;
+
+const challenge = 
 `gqraplu
 jmwftidynvozkhe
 
@@ -2262,23 +2300,5 @@ caeh
 qxvuhyp
 hxvcpy`;
 
-const groups = input.split("\n\n");
-const questions = "abcdefghijklmnopqrstuvwxyz".split("");
-const sumElementsOf = array => array.reduce((sum, a) => sum + a, 0);
-const countElementsOf = (array, test) => array.reduce((sum, a) => test(a) ? sum + 1 : sum, 0);
-
-// part 1
-console.log(
-    sumElementsOf(groups.map(group => (
-        countElementsOf(questions, q => group.includes(q))))
-    )
-);
-
-// part 2
-console.log(
-    sumElementsOf(groups.map(group => {
-        const personsInGroup = group.split("\n").length;
-        const yesCountForQuestions = questions.map(q => (group.match(new RegExp(q, "g")) || []).length);
-        return countElementsOf(yesCountForQuestions, count => count === personsInGroup);
-    }))
-);
+console.log(solve(example)); 
+console.log(solve(challenge)); 

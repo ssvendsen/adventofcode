@@ -1,4 +1,73 @@
-const input = 
+const solve = (input, preamble) => {
+
+    const numbers = input.split("\n").map(l => parseInt(l));
+
+    const findPairInRangeWithSum = (start, end, sum) => {
+        for (let a = start; a < end - 1; a++) {
+            for (let b = a + 1; b < end; b++) {
+                if (numbers[a] + numbers[b] === sum) {
+                    return [a, b];
+                }
+            }
+        }
+    }
+    
+    const findFirstNumNotSumOfPairInSeqBefore = () => {
+        for (let i = preamble; i < numbers.length; i++) {
+            if (!findPairInRangeWithSum(i - preamble, i, numbers[i])) {
+                return {pos: i, value: numbers[i]};
+            }
+        }
+    }
+    
+    const {pos, value} = findFirstNumNotSumOfPairInSeqBefore();
+    const task1 = value;
+
+    const findContSeqInRangeWithSum = (start, end, sum) => {
+        for (let a = start; a < end - 1; a++) {
+            let acc = numbers[a], min = acc, max = acc;
+            for (let b = a + 1; b < end; b++) {
+                acc += numbers[b];
+                min = Math.min(min, numbers[b]);
+                max = Math.max(max, numbers[b]);
+                if (acc === sum) {
+                    return {a, b, min, max};
+                } else if (acc > sum) {
+                    break;
+                }
+            }
+        }
+    }
+    
+    const {a, b, min, max} = findContSeqInRangeWithSum(0, numbers.length, value);
+    const task2 = min + max;
+
+    return [task1, task2];
+}
+
+const example =
+`35
+20
+15
+25
+47
+40
+62
+55
+65
+95
+102
+117
+150
+182
+127
+219
+299
+277
+309
+576`;
+
+const challenge = 
 `3
 48
 30
@@ -998,49 +1067,7 @@ const input =
 88116870562356
 89030753666596
 91202590422306
-93585443838482`.split("\n").map(l => parseInt(l));
+93585443838482`;
 
-const preambleLength = 25;
-
-const findPairInRangeWithSum = (start, end, sum) => {
-    for (let a = start; a < end - 1; a++) {
-        for (let b = a + 1; b < end; b++) {
-            if (input[a] + input[b] === sum) {
-                return [a, b];
-            }
-        }
-    }
-}
-
-const findFirstNumNotSumOfPairInSeqBefore = () => {
-    for (let i = preambleLength; i < input.length; i++) {
-        if (!findPairInRangeWithSum(i - 25, i, input[i])) {
-            return {pos: i, value: input[i]};
-        }
-    }
-}
-
-const {pos, value} = findFirstNumNotSumOfPairInSeqBefore();
-console.log(`The first number not a sum of two numbers in the sequence of 25 numbers before is _${value}_ on position ${pos}.`);
-
-const findContSeqInRangeWithSum = (start, end, sum) => {
-    for (let a = start; a < end - 1; a++) {
-        let acc = input[a], min = acc, max = acc;
-        for (let b = a + 1; b < end; b++) {
-            acc += input[b];
-            min = Math.min(min, input[b]);
-            max = Math.max(max, input[b]);
-            if (acc === sum) {
-                return {a, b, min, max};
-            } else if (acc > sum) {
-                break;
-            }
-        }
-    }
-}
-
-const {a, b, min, max} = findContSeqInRangeWithSum(0, input.length, value);
-const answer2 = min + max;
-console.log(`The range [${a}-${b}] sums up to ${value}, min and max in that range are ${min} and ${max}, sum being _${answer2}_.`);
-
-
+console.log(solve(example, 5)); 
+console.log(solve(challenge, 25)); 

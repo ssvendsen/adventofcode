@@ -21,7 +21,7 @@ const solve = (input, preamble) => {
     }
     
     const {pos, value} = findFirstNumNotSumOfPairInSeqBefore();
-    const task1 = value;
+    const result1 = value;
 
     const findContSeqInRangeWithSum = (start, end, sum) => {
         for (let a = start; a < end - 1; a++) {
@@ -40,9 +40,9 @@ const solve = (input, preamble) => {
     }
     
     const {a, b, min, max} = findContSeqInRangeWithSum(0, numbers.length, value);
-    const task2 = min + max;
+    const result2 = min + max;
 
-    return [task1, task2];
+    return [result1, result2];
 }
 
 const example =

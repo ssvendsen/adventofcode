@@ -6,17 +6,17 @@ const solve = (input) => {
     const sumElementsOf = (array) => array.reduce((sum, a) => sum + a, 0);
     const countElementsOf = (array, test) => array.reduce((sum, a) => test(a) ? sum + 1 : sum, 0);
 
-    const task1 = sumElementsOf(groups.map(group => (
+    const result1 = sumElementsOf(groups.map(group => (
         countElementsOf(questions, q => group.includes(q))))
     );
 
-    const task2 = sumElementsOf(groups.map(group => {
+    const result2 = sumElementsOf(groups.map(group => {
         const personsInGroup = group.split("\n").length;
         const yesCountForQuestions = questions.map(q => (group.match(new RegExp(q, "g")) || []).length);
         return countElementsOf(yesCountForQuestions, count => count === personsInGroup);
     }));
 
-    return [task1, task2];
+    return [result1, result2];
 }
 
 const example = 

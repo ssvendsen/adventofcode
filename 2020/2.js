@@ -4,20 +4,20 @@ const solve = (input) => {
 
     const re = /^(\d+)-(\d+) (.): (.+)$/;
     
-    let task1 = 0;
-    let task2 = 0;
+    let result1 = 0;
+    let result2 = 0;
     rules.map((rule => {
         const [match, aStr, bStr, char, password] = rule.match(re);
         const [a, b] = [aStr, bStr].map(s => parseInt(s));
         const count = (password.match(new RegExp(char, "g")) || []).length;
         if (count >= a && count <= b)
-            task1++;
+            result1++;
         const [isCharA, isCharB] = [a, b].map((pos) => password.charAt(pos - 1) === char);
         if (isCharA ? !isCharB : isCharB)
-            task2++;
+            result2++;
     }));
     
-    return [task1, task2];
+    return [result1, result2];
 }
 
 const example = 

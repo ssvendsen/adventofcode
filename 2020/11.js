@@ -38,9 +38,9 @@ const solve = (input) => {
         return taken;
     };
 
-    const task1 = run();
-    const task2 = run(true);
-    return [task1, task2];
+    const result1 = run();
+    const result2 = run(true);
+    return [result1, result2];
 };
 
 const example = 

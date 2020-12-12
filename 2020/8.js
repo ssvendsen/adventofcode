@@ -15,7 +15,7 @@ const solve = (input) => {
         return {addr, acc};
     }
 
-    const task1 = execute().acc;
+    const result1 = execute().acc;
 
     // part 2
     let result;
@@ -26,9 +26,9 @@ const solve = (input) => {
         }
     }
     
-    const task2 = result.acc;
+    const result2 = result.acc;
 
-    return [task1, task2];
+    return [result1, result2];
 }
 
 const example = 

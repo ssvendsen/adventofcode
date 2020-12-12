@@ -16,17 +16,17 @@ const solve = (input) => {
         return trees;
     }
 
-    const task1 =
+    const result1 =
         countTrees(3, 1);
 
-    const task2 = 
+    const result2 = 
         countTrees(1, 1) *
         countTrees(3, 1) *
         countTrees(5, 1) *
         countTrees(7, 1) *
         countTrees(1, 2);
 
-    return [task1, task2];
+    return [result1, result2];
 }
 
 const example =

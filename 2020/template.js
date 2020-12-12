@@ -2,10 +2,10 @@ const solve = (input) => {
 
 
 
-    const task1 = 0;
-    const task2 = 0;
+    const result1 = 0;
+    const result2 = 0;
 
-    return [task1, task2];
+    return [result1, result2];
 }
 
 const example = 

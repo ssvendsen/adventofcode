@@ -31,12 +31,12 @@ const solve = (input) => {
     const productOf = (list) => list.reduce((product, item) => product * item, 1);
 
     const pair = findPairWithSumInRange(sorted, 0, sorted.length - 1, 2020);
-    const task1 = productOf(pair);
+    const result1 = productOf(pair);
 
     const tripple = findTrippleWithSumInRange(sorted, 0, sorted.length - 1, 2020);
-    const task2 = productOf(tripple);
+    const result2 = productOf(tripple);
 
-    return [task1, task2];
+    return [result1, result2];
 }
 
 const example =

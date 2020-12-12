@@ -26,7 +26,7 @@ const solve = (input) => {
         if (p.byr && p.iyr && p.eyr && p.hgt && p.hcl && p.ecl && p.pid)
             valid1.push(p);
     })
-    const task1 = valid1.length;
+    const result1 = valid1.length;
 
     /*
     byr (Birth Year) - four digits; at least 1920 and at most 2002.
@@ -63,9 +63,9 @@ const solve = (input) => {
         )
             valid2.push(p);
     })
-    const task2 = valid2.length;
+    const result2 = valid2.length;
 
-    return [task1, task2];
+    return [result1, result2];
 };
 
 

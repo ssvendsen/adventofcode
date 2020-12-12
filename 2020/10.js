@@ -7,7 +7,7 @@ const solve = (input) => {
     const oneIncrements = increments.reduce((count, increment) => count + (increment === 1 ? 1 : 0))
     const threeIncrements = increments.reduce((count, increment) => count + (increment === 3 ? 1 : 0))
     
-    const task1 = oneIncrements * threeIncrements;
+    const result1 = oneIncrements * threeIncrements;
     
     // Part 2
     const oneIncrSeqLengthDistr = {};
@@ -31,9 +31,9 @@ const solve = (input) => {
         (permutations, [seqLength, count]) => permutations * (permutationsForSeqLengths[seqLength] ** count), 1
     );
     
-    const task2 = totalPermutations;    
+    const result2 = totalPermutations;    
 
-    return [task1, task2];
+    return [result1, result2];
 };
 
 const example1 = 

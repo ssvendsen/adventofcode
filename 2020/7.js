@@ -21,7 +21,7 @@ const solve = (input) => {
         else
             return Object.keys(rules[outerColor]).find((c) => canEventuallyContain(c, innerColor)) ? true : false;
     }
-    const task1 = Object.keys(rules).reduce((sum, c) => canEventuallyContain(c, "shiny gold") ? sum + 1: sum , 0);
+    const result1 = Object.keys(rules).reduce((sum, c) => canEventuallyContain(c, "shiny gold") ? sum + 1: sum , 0);
 
     const countBagsInside = (color) => {
         const rule = rules[color];
@@ -30,9 +30,9 @@ const solve = (input) => {
             return sum + count * (1 + countBagsInside(c));
          }, 0);
     }
-    const task2 = countBagsInside("shiny gold");
+    const result2 = countBagsInside("shiny gold");
     
-    return [task1, task2];
+    return [result1, result2];
 }
 
 const example = 

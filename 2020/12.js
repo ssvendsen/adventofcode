@@ -24,11 +24,11 @@ const solve = (input) => {
         return vector;
     };
 
-    const run = (position, waypoint, operations, isresult2 = false) => {
+    const run = (position, waypoint, operations, isTask2 = false) => {
         operations.forEach(([cmd, arg]) => {
             if (cmd === "F") {
                 position = move(position, waypoint, arg);
-            } else if (cmd in headings && !isresult2) {
+            } else if (cmd in headings && !isTask2) {
                 position = move(position, headings[cmd], arg);
             } else if (cmd in headings) {
                 waypoint = move(waypoint, headings[cmd], arg);
@@ -39,15 +39,11 @@ const solve = (input) => {
         return position;
     }
 
-    const getManhattan = (position) => Math.abs(position[0]) + Math.abs(position[1]);
+    const manhattan = (position) => Math.abs(position[0]) + Math.abs(position[1]);
 
     const start = [0, 0];
-
-    const end1 = run(start, headings["E"], program);
-    const result1 = getManhattan(end1);
-
-    const end2 = run(start, [10, -1], program, true);
-    const result2 = getManhattan(end2);
+    const result1 = manhattan(run(start, headings["E"], program, false));
+    const result2 = manhattan(run(start, [10, -1], program, true));
 
     return [result1, result2];
 }

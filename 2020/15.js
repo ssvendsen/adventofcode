@@ -7,41 +7,22 @@ const solve = (input) => {
 
     const run = (turns) => {
 
-        const start = performance.now();
+        // const start = performance.now();
 
-        // Keep an array with two slots for each number that has been spoken. 
-        // The two slots holds the last two turns that the number was spoken.
-        // If both slots are 0, the number has not been spoken. If only the
-        // second slot is 0, the number has been spoken once. 
+        const turnWhenSpoken = new Uint32Array(turns);
+        startingNumbers.forEach((number, index) => {
+            turnWhenSpoken[number] = index + 1;
+        });
 
-        //const lastSpokenTurns = new Array(turns * 2).fill(0);
-        const lastSpokenTurns = new Uint32Array(turns * 2);
-        //const lastSpokenTurns = new Int32Array(turns * 2);
-        //const lastSpokenTurns = new Float64Array(turns * 2);
-
-        startingNumbers.forEach((number, index) => lastSpokenTurns[number * 2] = index + 1);
-
+        let t0 = 0;
         let turn = startingNumbers.length;
-        let lastSpoken = startingNumbers[turn - 1];
-        let t1 = lastSpokenTurns[lastSpoken * 2];
-        let t2 = 0;
-
-        while (turn++ < turns) {
-            lastSpoken = t2 === 0 ? 0 : Math.abs(t1 - t2);
-            const t1Slot = lastSpoken * 2;
-            const t2Slot = t1Slot + 1;
-            t1 = lastSpokenTurns[t1Slot];
-            t2 = lastSpokenTurns[t2Slot];
-            if (t1 > t2) {
-                lastSpokenTurns[t2Slot] = turn;
-                t2 = turn;
-            } else {
-                lastSpokenTurns[t1Slot] = turn;
-                t1 = turn;
-            }
+        while (turn < turns) {
+            lastSpoken = t0 === 0 ? 0 : turn - t0; 
+            t0 = turnWhenSpoken[lastSpoken];
+            turnWhenSpoken[lastSpoken] = ++turn;
         }
 
-        // console.log(`Time for ${turns} turns with starting numbers ${input} is`, performance.now() - start, "ms, with", lastSpokenTurns.constructor.name);
+        // console.log(`${turns} turns with starting numbers ${input} took ${performance.now() - start} ms`);
 
         return lastSpoken;
     }

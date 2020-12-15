@@ -2,31 +2,33 @@ const solve = (input) => {
 
     const numbers = input.split(",").map(n => +n);
 
-    const run = (lim) => {
+    const run = (turns) => {
 
-        // Track the last two occurences of each seen number
-        const lastSpokenPairs = new Uint32Array(lim * 2);
-        numbers.forEach((number, index) => lastSpokenPairs[number * 2] = index + 1);
+        // Track the last two turns each number has been spoken.  
+        // Two or one 0 values means the number was not spoken yet or only once
+        const lastSpokenTurnPairs = new Uint32Array(turns * 2);
+        numbers.forEach((number, index) => lastSpokenTurnPairs[number * 2] = index + 1);
 
         let turn = numbers.length;
-        let last = numbers[turn - 1];
-        while (turn++ < lim) {
-            t1 = lastSpokenPairs[last * 2];
-            t2 = lastSpokenPairs[last * 2 + 1];
+        let lastSpoken = numbers[turn - 1];
+        let t1, t2;
+        while (turn++ < turns) {
+            t1 = lastSpokenTurnPairs[lastSpoken * 2];
+            t2 = lastSpokenTurnPairs[lastSpoken * 2 + 1];
             if (t2 === 0) {
-                last = 0;
+                lastSpoken = 0;
             } else {
-                last = Math.abs(t1 - t2);
+                lastSpoken = Math.abs(t1 - t2);
             }
-            t1 = lastSpokenPairs[last * 2];
-            t2 = lastSpokenPairs[last * 2 + 1];
+            t1 = lastSpokenTurnPairs[lastSpoken * 2];
+            t2 = lastSpokenTurnPairs[lastSpoken * 2 + 1];
             if (t1 > t2) {
-                lastSpokenPairs[last * 2 + 1] = turn;
+                lastSpokenTurnPairs[lastSpoken * 2 + 1] = turn;
             } else {
-                lastSpokenPairs[last * 2] = turn;
+                lastSpokenTurnPairs[lastSpoken * 2] = turn;
             }
         }
-        return last;
+        return lastSpoken;
     }
 
     const result1 = run(2020);

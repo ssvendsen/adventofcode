@@ -53,7 +53,6 @@ const solve = (input) => {
     }
 
     const result1 = sum(lines, precedence1);
-
     const result2 = sum(lines, precedence2);
 
     return [result1, result2];

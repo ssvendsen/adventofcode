@@ -2,42 +2,37 @@ const solve = (input) => {
 
     const lines = input.split("\n"); 
 
+    const BLOCK_START = "(", BLOCK_END = ")";
+
     const operands = {
         "*": (a, b) => a * b,
-        "/": (a, b) => a / b,
         "+": (a, b) => a + b,
-        "-": (a, b) => a - b,
     }
+    const precedence1 = {
+        "*": 1, 
+        "+": 1
+    };
+    const precedence2 = {
+        "*": 1, 
+        "+": 2
+    };
 
-    const eval = (tokens, precedence) => {
-
+    const evalTokens = (tokens, precedence) => {
         const args = [], ops = [];
-        
-        while (tokens.length > 0) {
-
+        while (tokens.length > 0 && tokens[0] != BLOCK_END) {
             const token = tokens.shift();
-
-            if (token === ")") {
-                break;
-            }
-
             if (token in operands) {
                 ops.push(token);
                 continue;
+            } 
+            if (token === BLOCK_START) {
+                args.push(evalTokens(tokens, precedence));
+                tokens.shift(); // BLOCK_END
             }
-
-            if (token === "(") {
-                args.push(eval(tokens, precedence));
-            }
-
-            if (token >=  "0" && token <= "9") {
+            if (!isNaN(token)) {
                 args.push(parseInt(token));
             }
-
-            while (ops.length >= 1 && args.length >= 2) {
-                if (precedence[tokens[0]] > precedence[ops[ops.length-1]]) {
-                    break;
-                }
+            while (ops.length > 0 && !(precedence[tokens[0]] > precedence[ops[ops.length-1]])) {
                 const operand = operands[ops.pop()];
                 const right = args.pop()
                 const left = args.pop()
@@ -45,43 +40,23 @@ const solve = (input) => {
                 args.push(value);
             }
         }
-
         return args[0];
     }
 
-    /*const precedence0 = {
-        "*": 2,
-        "/": 2,
-        "+": 1,
-        "-": 2,
-    }*/
-
-    const precedence1 = {
-        "*": 1,
-        "/": 1,
-        "+": 1,
-        "-": 1,
-    }
-
-    const precedence2 = {
-        "*": 1,
-        "/": 1,
-        "+": 2,
-        "-": 2,
+    const evalString = (str, precedence) => {
+        const tokens = str.split("").filter(t => t !== " ");
+        return evalTokens(tokens, precedence);
     }
 
     const sum = (lines, precedence) => {
-        return lines.reduce((sum, line) => {
-            const tokens = line.split("").filter(t => t !== " ");
-            return sum + eval(tokens, precedence);
-        }, 0);
+        return lines.reduce((sum, line) => sum + evalString(line, precedence), 0);
     }
 
-    // const result0 = sum(lines, precedence0);
     const result1 = sum(lines, precedence1);
+
     const result2 = sum(lines, precedence2);
 
-    return [/*result0,*/ result1, result2];
+    return [result1, result2];
 }
 
 const example = 

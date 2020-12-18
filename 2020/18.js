@@ -17,7 +17,7 @@ const solve = (input) => {
         "+": 2
     };
 
-    const evalTokens = (tokens, precedence) => {
+    const eval = (tokens, precedence) => {
         const args = [], ops = [];
         while (tokens.length > 0 && tokens[0] != BLOCK_END) {
             const token = tokens.shift();
@@ -26,7 +26,7 @@ const solve = (input) => {
                 continue;
             } 
             if (token === BLOCK_START) {
-                args.push(evalTokens(tokens, precedence));
+                args.push(eval(tokens, precedence));
                 tokens.shift(); // BLOCK_END
             }
             if (!isNaN(token)) {
@@ -45,7 +45,7 @@ const solve = (input) => {
 
     const evalString = (str, precedence) => {
         const tokens = str.split("").filter(t => t !== " ");
-        return evalTokens(tokens, precedence);
+        return eval(tokens, precedence);
     }
 
     const sum = (lines, precedence) => {

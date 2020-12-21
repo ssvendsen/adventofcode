@@ -2,7 +2,7 @@ const solve = (input) => {
 
     const [rules, messages] = input.split("\n\n").map(s => s.split("\n"));
 
-    const productions = {}; // or 'nonterminals'?
+    const productions = {}; 
     rules.forEach(r => {
         const [nonterminal, expression] = r.split(": ");
         const sequences = expression.split(" | ").map(symbols => symbols.replace(/"/g, "").split(" "));
@@ -15,73 +15,52 @@ const solve = (input) => {
         return string.split("");
     }
 
+    const testSequence = (sequence, s, tokens, pos) => {
+        const symbol = sequence[s];
+        if (symbol in productions) {
+            const consumed = testProduction(symbol, tokens, pos);
+            if (consumed.length > 0 && sequence.length > s + 1) {
+                return consumed.flatMap(i => testSequence(sequence, s + 1, tokens, i));
+            } else {
+                return consumed;
+            }
+        } else if (terminals.includes(symbol)) { // not a quick lookup but we only got two terminals...
+            if (symbol === tokens[pos]) {
+                return [pos + 1];
+            } else {
+                return [];
+            }
+        } else {
+            throw "Internal error: Symbol in production sequence is not a terminal or nonterminal."
+        }
+    }
+
+    const testProduction = (production, tokens, pos) => { // true or false, simply
+        const sequences = productions[production];
+        const consumed = sequences.flatMap(sequence => testSequence(sequence, 0, tokens, pos));
+        return consumed;
+    }
+
+    const matchMessages = (messages) => {
+        let count = 0;
+        messages.forEach(message => {
+            const tokens = tokenize(message);
+            const consumed = testProduction(goal, tokens, 0);
+            // console.log(message, consumed);
+            if (consumed.find(c => c === message.length))
+                count++
+        });
+        return count;
+    }
+
+
+    const result1 = matchMessages(messages);
+
+    // modify input for part 2
     productions[8].push(['42', '8']);
     productions[11].push(['42', '11', '31']);
 
-    let depth = 0;
-    const testSequence = (sequence, tokens, pos) => {
-        // console.log(depth++);
-        let i = 0;
-        for (const symbol of sequence) {
-            if (symbol in productions) {
-                const consumed = testProduction(symbol, tokens, pos + i);
-                if (consumed === -1) {
-                    return -1;
-                } else {
-                    i += consumed;
-                }
-            } else if (terminals.includes(symbol)) { // not a quick lookup but we only got two terminals...
-                if (symbol !== tokens[pos + i]) {
-                    return -1;
-                } else {
-                    i += 1;
-                }
-            } else {
-                throw "Internal error: Symbol in production sequence is not a terminal or nonterminal."
-            }
-        }
-        return i;
-    }
-
-
-    const lastTried ={};
-    const stack = [];
-    const testProduction = (production, tokens, pos) => { // true or false, simply
-        stack.push(production);
-        const id = stack.join("-")+pos;
-        const sequences = productions[production];
-        const lengths = sequences.map(sequence => testSequence(sequence, tokens, pos));
-        const longest = lengths.reduce((max, l) => Math.max(max, l), -1);
-        const notNull = lengths.filter(l => l !== -1);
-        const shortestNotNull = notNull.reduce((min, l) => Math.min(min, l), Number.MAX_SAFE_INTEGER);
-        if (longest !== -1 && lengths.length > 1 && lengths[0] !== -1 && lengths[1] !== -1) {
-            console.log(stack, lengths, pos, id);
-        }
-        stack.pop();
-        return shortestNotNull !== Number.MAX_SAFE_INTEGER ? shortestNotNull : -1;
-        // longest;
-        /*for (const sequence of sequences) {
-            const consumed = testSequence(sequence, tokens, pos);
-            if (consumed !== -1) {
-                //console.log(production, consumed);
-                return consumed;
-            }
-        }
-        return -1*/
-    }
-
-    let count = 0;
-    messages.forEach(message => {
-        const tokens = tokenize(message);
-        console.log();
-        console.log(message);
-        const consumed = testProduction(goal, tokens, 0);
-        console.log(message.length === consumed);
-    });
-
-    // console.log(productions, messages);
-    const result1 = count;
-    const result2 = 0;
+    const result2 = matchMessages(messages);
 
     return [result1, result2];
 }
@@ -599,4 +578,4 @@ bbbaabaaabbaababbbbaabaabbabababababbaab`;
 
 // console.log(solve(example1)); 
 console.log(solve(example2)); 
-//console.log(solve(challenge)); 
+console.log(solve(challenge)); 

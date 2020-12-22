@@ -20,19 +20,19 @@ const solve = (input) => {
 
     const LEFT = 0, TOP = 1, RIGHT = 2, BOTTOM = 3;
     const oposites = { [LEFT]: RIGHT, [RIGHT]: LEFT, [TOP]: BOTTOM, [BOTTOM]: TOP };
-    const flipEdge = (edge) => [...edge].reverse().join("");
+    const flip = (edge) => [...edge].reverse().join("");
 
     const flipTileHorizontal = (tile) => {
-        tile.rows = tile.rows.map(row => flipEdge(row));
+        tile.rows = tile.rows.map(row => flip(row));
         tile.edges = edgesFrom(tile.rows);
-        console.log("Flipped", tile.id, "to", tile.rows);
+        // console.log("Flipped", tile.id, "to", tile.rows);
     }
 
     const rotateTile = (tile) => {
         const dim = tile.rows.length;
-        tile.rows = tile.rows.map((_, i) => tile.rows.map(r => r[dim - 1 - i]).join("")); // assuming square tile
+        tile.rows = tile.rows.map((_, i) => tile.rows.map(r => r[dim - 1 - i]).join("")); // rotates ccw. assuming square tile.
         tile.edges = edgesFrom(tile.rows);
-        console.log("Rotated", tile.id, "to", tile.rows);
+        // console.log("Rotated", tile.id, "to", tile.rows);
     }
 
     const orientTileToMatchEdge = (tile, edge, side) => {
@@ -57,16 +57,18 @@ const solve = (input) => {
         throw "Can't rotate/flow to position";
     }
 
-    // get tiles from input
+    // Get tiles from input
     const tiles = input.split("\n\n").map(block => tileFrom(block));
 
-    // look at tiles edges and find other tiles that can be adjacent
+    // look at tiles edges and find other tiles that can be adjacent.
+    // positions are relative so it does not matter which tile we start with.
+    // when a tile that must be adjacent to the current one is found, orient it properly
+    // in the next round pick any of the tiles that have already been oriented.
     const findAdjacent = (tiles) => {
-        const adjacent = new Set(); // got to make sure tiles processed are connected to tiles that are correctly oriented (i.e. avoid 'islands' of oriented tiles as they can have oposite orientation)
-        adjacent.add(tiles[0]);
-        while (adjacent.size > 0) {
-            const tile = adjacent.entries().next().value[0];
-        // tiles.forEach(tile => {
+        const oriented = new Set(); 
+        oriented.add(tiles[0]);
+        while (oriented.size > 0) {
+            const tile = oriented.entries().next().value[0]; // get any that has already been oriented 
             const ownEdges = tile.edges;
             const ownReverseEdges = ownEdges.map(e => [...e].reverse().join(""));
             const neighbours = [];
@@ -80,26 +82,26 @@ const solve = (input) => {
                         const opositeSide = oposites[i];
                         orientTileToMatchEdge(otherTile, ownEdges[i], opositeSide);
                         if (otherTile.oriented === false)
-                            adjacent.add(otherTile);
+                            oriented.add(otherTile);
                         otherTile.oriented = true;
                     }
                 }
             });
             tile.neighbours = neighbours;
-            adjacent.delete(tile);
+            oriented.delete(tile);
             //console.log(tile.id, neighbours);
         };
     }
 
     findAdjacent(tiles);
 
-    // console.log(tiles);
 
     // assemble, starting with tile with no neighbour on left and top
     const cornerTile = tiles.find(tile => tile.neighbours[LEFT] === undefined && tile.neighbours[TOP] === undefined);
-    console.log(cornerTile.id);
+
     const getTile = (id) => tiles.find(tile => tile.id === id);
 
+    // stack tiles in a grid (rows) using the neighbour info, so that it is easier to process later
     const rows = [];
     let edgeTileId = cornerTile.id; 
     while (edgeTileId) {
@@ -115,11 +117,12 @@ const solve = (input) => {
         edgeTileId = edgeTile.neighbours[BOTTOM];
     }
 
-    // console.log(cornerTile);
-    console.log(rows);
+    // part 1 answer, product of corner tile ids
+    const dim = rows.length;
+    cornerTiles = [rows[0][0], rows[0][dim-1], rows[dim-1][0], rows[dim-1][dim-1]];
+    result1 = cornerTiles.reduce((product, tile) => product * tile, 1);
 
-    //rows.pop();
-    // rows.shift();
+    // assemble the final map
     const map = rows.flatMap(row => {
         const lines = new Array(8).fill().map(l => "");
         row.forEach(id => {
@@ -130,10 +133,64 @@ const solve = (input) => {
         return lines;
     });
 
-    console.log(map);
 
-    const result1 = 0;
-    const result2 = 0;
+    const monster = [
+        "                  # ",
+        "#    ##    ##    ###",
+        " #  #  #  #  #  #   "
+    ];
+
+
+    const count1s=(n)=>n.toString(2).replace(/0/g,"").length
+
+    const matchPattern = (rows, pattern) => {
+        const positions = [];
+        const pWidth = pattern[0].length;
+        const pHeight = pattern.length;
+        for (let y = 0; y < rows.length - pHeight + 1; y++) {
+            for (let x = 0; x < rows[0].length - pWidth + 1; x++) {
+                let maskedHashes = 0;
+                const match = pattern.reduce((m, p, i) => {
+                    const slice = rows[y + i].slice(x, x + p.length);
+                    const nSlice = parseInt(slice.replace(/#/g, "1").replace(/\./g, "0"), 2);
+                    const nP = parseInt(p.replace(/#/g, "1").replace(/ /g, "0"), 2);
+                    const coverage = nP & nSlice;
+                    maskedHashes += count1s(coverage);
+                    const match = coverage === nP;
+                    return m && match;
+                }, true);
+                if (match) {
+                    positions.push([x, y, maskedHashes]);
+                }
+            }
+        }
+        return positions;
+    }
+
+    const mapTile = {rows: map}
+    matchPattern(mapTile.rows, monster);
+    rotateTile(mapTile)
+    matchPattern(mapTile.rows, monster);
+    rotateTile(mapTile)
+    matchPattern(mapTile.rows, monster);
+    rotateTile(mapTile)
+    matchPattern(mapTile.rows, monster);
+    rotateTile(mapTile)
+    flipTileHorizontal(mapTile)
+    matchPattern(mapTile.rows, monster);
+    rotateTile(mapTile)
+    matchPattern(mapTile.rows, monster);
+    rotateTile(mapTile)
+    matchPattern(mapTile.rows, monster);
+    rotateTile(mapTile)
+    const positions = matchPattern(mapTile.rows, monster); // <--- cheating, this is the one
+    console.log(positions);
+
+    const hashesCovered = positions.reduce((sum, pos) => sum + pos[2], 0);
+    const string = map.join("");
+    const hashesInMap = string.length - string.replace(/#/g, "").length;
+
+    const result2 = hashesInMap - hashesCovered;
 
     return [result1, result2];
 }

@@ -7,7 +7,7 @@ const solve = (input) => {
 
     const run = (turns) => {
 
-        // const start = performance.now();
+        const start = performance.now();
 
         const turnWhenSpoken = new Uint32Array(turns);
         startingNumbers.forEach((number, index) => {
@@ -15,14 +15,23 @@ const solve = (input) => {
         });
 
         let t0 = 0;
+        let t_ = 2;
         let turn = startingNumbers.length;
         while (turn < turns) {
-            lastSpoken = t0 === 0 ? 0 : turn - t0; 
-            t0 = turnWhenSpoken[lastSpoken];
-            turnWhenSpoken[lastSpoken] = ++turn;
+            if (t0 === 0) {
+                lastSpoken = 0;
+                //t0 = t_;
+                //t_ = ++turn;
+                t0 = turnWhenSpoken[lastSpoken];
+                turnWhenSpoken[lastSpoken] = ++turn;
+            } else {
+                lastSpoken = turn - t0; 
+                t0 = turnWhenSpoken[lastSpoken];
+                turnWhenSpoken[lastSpoken] = ++turn;
+            }
         }
 
-        // console.log(`${turns} turns with starting numbers ${input} took ${performance.now() - start} ms`);
+        // console.log(`${turns} turns with starting numbers ${input} took ${performance.now() - start} ms.`);
 
         return lastSpoken;
     }
@@ -38,6 +47,6 @@ const example =
 
 const challenge = 
 `2,0,6,12,1,3`;
-
+//`0,14,6,20,1,4`;
 console.log(solve(example)); 
 console.log(solve(challenge)); 

@@ -24,19 +24,27 @@ const solve = (input) => {
         return vector;
     };
 
+    const step = (state, operation, isTask2 = false) => {
+        let [position, waypoint] = state;
+        let [cmd, arg] = operation;
+        if (cmd === "F") {
+            position = move(position, waypoint, arg);
+        } else if (cmd in headings && !isTask2) {
+            position = move(position, headings[cmd], arg);
+        } else if (cmd in headings) {
+            waypoint = move(waypoint, headings[cmd], arg);
+        } else {
+            waypoint = rotate(waypoint, cmd, arg);
+        }
+        return [position, waypoint];
+    }
+
     const run = (position, waypoint, operations, isTask2 = false) => {
-        operations.forEach(([cmd, arg]) => {
-            if (cmd === "F") {
-                position = move(position, waypoint, arg);
-            } else if (cmd in headings && !isTask2) {
-                position = move(position, headings[cmd], arg);
-            } else if (cmd in headings) {
-                waypoint = move(waypoint, headings[cmd], arg);
-            } else {
-                waypoint = rotate(waypoint, cmd, arg);
-            }
+        let state = [position, waypoint];
+        operations.forEach((operation) => {
+            state = step(state, operation, isTask2);
         });
-        return position;
+        return state[0];
     }
 
     const manhattan = (position) => Math.abs(position[0]) + Math.abs(position[1]);

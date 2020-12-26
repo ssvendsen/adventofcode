@@ -24,8 +24,8 @@ const solve = (input) => {
     const play = (cups, current, max, rounds) => {
         while (rounds--) {
             current = move(cups, current, max);
-            if (rounds % 1000_000 === 0)
-                console.log("*");
+            //if (rounds % 1000_000 === 0)
+            //    console.log("*");
         }
         const seq = [];
         let s = 1;

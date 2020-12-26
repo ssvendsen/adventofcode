@@ -48,7 +48,7 @@ const solve = (input) => {
         })
     })
     
-    console.log(filteredIngredientsForAlergens);
+    // console.log(filteredIngredientsForAlergens);
 
     const theList = Object.entries(filteredIngredientsForAlergens).map(([alergen, ingredients]) => ({alergen, ingredients}));
     
@@ -57,7 +57,7 @@ const solve = (input) => {
         theList.sort((a, b) => 
             a.ingredients.size - b.ingredients.size
         );
-        console.log(theList);
+        // console.log(theList);
 
         const {alergen, ingredients} = theList[i];
         if (ingredients.size !== 1)
@@ -70,16 +70,14 @@ const solve = (input) => {
 
     theList.sort((a, b) => a.alergen.localeCompare(b.alergen));
 
-    console.log(theList);
+    // console.log(theList);
 
     const canonicalList = theList.map(({ingredients}) => [...ingredients][0]).join(",");
 
-    // const sorted = [...filteredIngredientsForAlergens];
-
-    console.log(canonicalList);
+    // console.log(canonicalList);
 
     const result1 = alergenFreeIngredientCount;
-    const result2 = 0;
+    const result2 = canonicalList;
 
     return [result1, result2];
 }
@@ -142,5 +140,5 @@ dkng zhlt sgzr mndtv lssrnhn zdcvnk bthjz xrn jqfktrt rngm vsqrzx nvlz bxcthm xt
 vsfz rsmg qfql sdxkt rjb pfx xcvqp gbsjx zrtlv kctkhg jhdzz vdvs jzbhxq dcmhdkm gtmqj vrnkfr qlgtfx hhjttv gmbcjjd gccjpvx nqbd hnrxcl rfsz mvkj vxrgk gdtzrg kmppk grzmk nclt gcgms jxcxh vg gpfpp jqfktrt kmhxmd slzctbv rqskr hqf zsvs dklfxrm lsvkc lxtc lkgvx bthjz mbkbn xxsvnx kkkdtn clghk ndkkq llsvqv klctxj nbbjjq kslcnpt qlgd xmx zrkjc xlljpg bqnn pkkg hxdbs mxrn php ctrsrl fztz gfvrr blkzhh jgdcp kpjnltk zrfdh xpmhz gx gcp jhl hsbcqj zhlkr ctrn gdpnb mjbtz (contains dairy)
 mjbtz dkng chtfln rsmg bxcthm gx qlgd dfqlcrs pndtrl nclt tfc mnzcxjd mscl rpncf bdbn lvhb kccpf vzrtvj kpjnltk gcgms hjcpjz jqs sdxkt zsvs bthgq blbbcs mdh zrkjc rkl vfklqc jhl cdnhg vxrgk jqfktrt ndkkq jvntmtdx xrn fgfc ggvglx kvqgb mxrn nvlz nzhx sjgcd hrqhjf gtpm mbkbn jxcxh xxsvnx cjrpc mndvp qfql hnkn hblmrt sgzr qzvlvh klctxj ctrsrl tjsh gfvrr jbsjb pkkg (contains nuts, fish)`;
 
-// console.log(solve(example)); 
+console.log(solve(example)); 
 console.log(solve(challenge)); 

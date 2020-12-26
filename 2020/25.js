@@ -21,7 +21,7 @@ const solve = (input) => {
     }
 
     const loopSizes = publicKeys.map(pk => testLoopSize(pk));
-    loopSizes.forEach(ls => console.log(ls));
+    //loopSizes.forEach(ls => console.log(ls));
 
     const transform = (subject, loopSize) => {
         let value = 1;
@@ -31,14 +31,14 @@ const solve = (input) => {
         return value;
     }
 
-
     const encryptionKeys = loopSizes.map((ls, i) => transform(publicKeys[1 - i], ls));
-    encryptionKeys.forEach((ek => console.log(ek)));
+    //encryptionKeys.forEach((ek => console.log(ek)));
+    if (encryptionKeys[0] !== encryptionKeys[1])
+        throw "The two keys should be the same"
 
-    const result1 = 0;
-    const result2 = 0;
+    const result1 = encryptionKeys[0];
 
-    return [result1, result2];
+    return [result1];
 }
 
 const example = 

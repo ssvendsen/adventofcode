@@ -46,7 +46,7 @@ const solve = (input) => {
     const numRules = rules.length;
     let columns = new Array(numRules).fill(0).map((c, i) => i);
     const mappings = rules.map((rule) => {
-        console.log("rule", rule);
+        // console.log("rule", rule);
         const {field, ranges} = rule;
         const c = columns.filter(column => checkRangesforTicketColumn(ranges, column));
         return {field, columns: c};

@@ -184,7 +184,7 @@ const solve = (input) => {
     matchPattern(mapTile.rows, monster);
     rotateTile(mapTile)
     const positions = matchPattern(mapTile.rows, monster); // <--- cheating, this is the one
-    console.log(positions);
+    // console.log(positions);
 
     const hashesCovered = positions.reduce((sum, pos) => sum + pos[2], 0);
     const string = map.join("");

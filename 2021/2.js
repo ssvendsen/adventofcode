@@ -18,26 +18,26 @@ const solve = (input) => {
             throw `Unexpected command '${command}'`;
         }
     })
+    
     const result1 = pos * depth;
 
     pos = depth = 0;
     let aim = 0;
     
-    instructions.forEach(command => {
-        const [instr, amount] = command;
-        if (instr === "forward") {
+    instructions.forEach(instruction => {
+        const [command, amount] = instruction;
+        if (command === "forward") {
             pos += amount;
             depth += aim * amount;
-        } else if (instr === "down") {
+        } else if (command === "down") {
             aim += amount;
-        } else if (instr === "up") {
+        } else if (command === "up") {
             aim -= amount;
         } else {
-            throw `Unexpected command '${command}'`;
+            throw `Unexpected command '${instruction}'`;
         }
     })
 
-    // console.log(pos, depth)
     const result2 = pos * depth;
 
     return [result1, result2];

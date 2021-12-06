@@ -8,14 +8,14 @@ const solve = (input) => {
         return ageMap;
     }
 
-    const nextFrom = (age) => (
+    const nextAgesFrom = (age) => (
         age > 0 ? [age - 1] : [6, 8]
     );
     
     const stepAgeMap = (ageMap) => {
         const nextAgeMap = new Map();
         ageMap.forEach((count, age) => {
-            nextFrom(age).forEach(nextAge => {
+            nextAgesFrom(age).forEach(nextAge => {
                 incrementAgeCount(nextAgeMap, nextAge, count);
             })
         })

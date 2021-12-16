@@ -26,10 +26,6 @@ const solve = (input) => {
             this.bitOffset += bitCount;
             return output;
         }
-        align = () => {
-            const offsetInNibble = this.bitOffset % 4;
-            this.bitOffset += offsetInNibble > 0 ? (4 - offsetInNibble) : 0; 
-        }
         position = () => {
             return this.bitOffset;
         }

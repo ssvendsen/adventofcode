@@ -22,8 +22,8 @@ const solve = (input) => {
     const findUniqueSubSequence = (sequence, length) => {
         const distances = getDistancesToNextSame(sequence);
         let uniqueSeqLength = 0;
-        return distances.findIndex(distance => {
-            uniqueSeqLength = (uniqueSeqLength + distance) >= length ? uniqueSeqLength + 1 : 0;
+        return distances.findIndex(distanceToNextSame => {
+            uniqueSeqLength = (uniqueSeqLength + distanceToNextSame) >= length ? uniqueSeqLength + 1 : 0;
             return uniqueSeqLength > length;
         })
     }

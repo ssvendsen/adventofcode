@@ -1,5 +1,5 @@
 
-const days = 4;
+const days = 6;
 new Array(days).fill().forEach((v, i) => {
     const day = i + 1;
     console.log("Day", day);

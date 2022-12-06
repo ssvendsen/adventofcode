@@ -5,7 +5,7 @@ const solve = (input) => {
     // scan a sequence of characters and return an array of the same length,
     // where each entry is the distance from the character in that position in 
     // the input, to the next same character in the input
-    const getDistancesToSameChar = (sequence) => {
+    const getDistancesToNextSame = (sequence) => {
         const charPos = {};
         const distances = Array(sequence.length).fill(Number.MAX_SAFE_INTEGER);
         sequence.forEach((char, pos) => {
@@ -20,7 +20,7 @@ const solve = (input) => {
 
     // scan for a sub sequence of unique characters of a given length
     const findUniqueSubSequence = (sequence, length) => {
-        const distances = getDistancesToSameChar(sequence);
+        const distances = getDistancesToNextSame(sequence);
         let uniqueSeqLength = 0;
         return distances.findIndex(distance => {
             uniqueSeqLength = (uniqueSeqLength + distance) >= length ? uniqueSeqLength + 1 : 0;

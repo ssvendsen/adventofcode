@@ -7,7 +7,7 @@ const parseBlock = (block) => {
     const testVal = +lines[3].match(/Test: divisible by (.+)/)[1];
     const trueVal = +lines[4].match(/If true: throw to monkey (.+)/)[1];
     const falseVal = +lines[5].match(/If false: throw to monkey (.+)/)[1];
-    return {id, items, opTokens, testVal, trueVal, falseVal, inspections: 0, maxWorry: 0};
+    return {id, items, opTokens, testVal, trueVal, falseVal, inspections: 0};
 }
 
 const calcWorryLevel = (oldLevel, opTokens) => {
@@ -34,19 +34,14 @@ const processMonkey = (monkeys, index, reduceWorryLevel) =>  {
         const recipient = monkeys[recipientIndex];
         recipient.items.push(reducedWorryLevel);
         monkey.inspections++;
-        monkey.maxWorry = Math.max(monkey.maxWorry, reducedWorryLevel); 
     }
 }
 
-const processRound = (monkeys, reduceWorry) => {
-    for (let i = 0; i < monkeys.length; i++) {
-        processMonkey(monkeys, i, reduceWorry);
-    }
-}
-
-const process = (monkeys, rounds, reduceWorry) => {
-    while (rounds--) {
-        processRound(monkeys, reduceWorry);
+const process = (monkeys, rounds, reduceWorryLevel) => {
+    for (let r = 0; r < rounds; r++) {
+        for (let i = 0; i < monkeys.length; i++) {
+            processMonkey(monkeys, i, reduceWorryLevel);
+        }
     }
 }
 
